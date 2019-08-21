@@ -6,6 +6,9 @@
  Note:
     - python 3.6.8
     - Link: https://www.python.org/downloads/release/python-368/
+ Dependcies:
+    sudo apt-get install scrot
+    pip install opencv-python
 '''
 import pyautogui
 import time
@@ -15,6 +18,7 @@ import subprocess
 import webbrowser as wb
 import json
 
+jsonfile='data.json'
 
 class locateMouse:
     pic_name,icrs_x,decre_x,icrs_y,decre_y = ["",0,0,0,0]
@@ -49,39 +53,60 @@ class locateMouse:
         x,y = self.locationOnScreen()
         pyautogui.click(x, y)
 
+    def fill_in_text(self,strData, inputList = []):
+        self.pic_name = inputList[0]
+        tmpList = [self.pic_name,0,0,0,0]
+        self.leftClick(tmpList)
+
+        self.leftClick(inputList)
+        pyautogui.hotkey('ctrl', 'a')
+        pyautogui.typewrite(strData)
+
+
 def pathof(subdir,filename):
     pathname=os.path.dirname(sys.argv[0]) #current dir of the script
     pathname=os.path.join(pathname,subdir,filename)
     return pathname
 
-def file_get_contents(filename):
-    with open(filename, 'r') as f:
-        return f.read()
-
-
-def typewrite_contents(filename,addstr):
-    filecontents = file_get_contents(filename) + "\\" + addstr
-    print(filecontents)
-    pyautogui.typewrite(filecontents)
-    time.sleep(2)
-
 def openWebBrowser():
     url="https://px.afdrift.se/login/login.asp"
     wb.open_new_tab(url)
-def parseJSONfile():
-    with open('data.json', 'r') as f:
-        distros_dict = json.load(f)
 
-    for distro in distros_dict:
-        print(distro['Database'])
+def getValFromJasonFile(key,jsonfile):
+    with open(jsonfile, 'r') as f:
+        data_dict = json.load(f)
+    for data in data_dict:
+        return data[key]
 
 def main():
-    #openWebBrowser()
-    parseJSONfile()
-    #a = locateMouse()
-    #a.leftClick([pathof("images","SelectPort.png"), 0, 0, 0, 0])
-
+    openWebBrowser()
+    a = locateMouse()
     
+    a.fill_in_text(getValFromJasonFile('Username',jsonfile),[pathof("images","Username.png"), 100, 0, 0, 0])
+    a.fill_in_text(getValFromJasonFile('Password',jsonfile),[pathof("images","Password.png"), 100, 0, 0, 0])
+    a.fill_in_text(getValFromJasonFile('Server',jsonfile),[pathof("images","Server.png"), 100, 0, 0, 0])
+    a.fill_in_text(getValFromJasonFile('Database',jsonfile),[pathof("images","Database.png"), 100, 0, 0, 0])
+
+    a.leftClick([pathof("images","loginButton.png"), 0, 0, 0, 0])
+    a.leftClick([pathof("images","valjButton.png"), 0, 0, 0, 0])
+    a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
+    
+    a.fill_in_text(getValFromJasonFile('Activity',jsonfile),[pathof("images","Activity.png"), 0, 0, 30, 0])
+    a.fill_in_text(getValFromJasonFile('Assignment',jsonfile),[pathof("images","Assignment.png"), 0, 0, 30, 0])
+    a.leftClick([pathof("images","load.png"), 0, 0, 0, 0])
+
+    week = ["Mon", "Tues", "Wed", "Thurs", "Fri"]
+
+    for date in week:
+        imagefile= date + ".png"
+        val=getValFromJasonFile(date,jsonfile)
+        if "0" in val or val.isdigit() is False:
+             a.fill_in_text("8",[pathof("images",imagefile), 0, 0, 30, 0])
+        else:
+             a.fill_in_text(val,[pathof("images",imagefile), 0, 0, 50, 0])
+
+    a.leftClick([pathof("images","saveButton.png"), 0, 0, 0, 0])
+
 if __name__ == "__main__":
     main()
 

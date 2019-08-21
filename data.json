@@ -5,6 +5,11 @@
         "Server": "PX",
         "Database": "AUTO",
         "Activity": "00",
-        "TaskID": "103500"
+        "Assignment": "103500",
+        "Mon": "8",
+        "Tues": "8",
+        "Wed": "8",
+        "Thurs": "8",
+        "Fri": "8"
     }
 ]
