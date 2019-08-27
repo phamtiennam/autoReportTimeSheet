@@ -87,7 +87,7 @@ def main():
     a.fill_in_text(getValFromJasonFile('Server',jsonfile),[pathof("images","Server.png"), 100, 0, 0, 0])
     a.fill_in_text(getValFromJasonFile('Database',jsonfile),[pathof("images","Database.png"), 100, 0, 0, 0])
 
-    a.leftClick([pathof("images","loginButton.png"), 0, 0, 0, 0])
+    a.leftClick([pathof("images","login_Button.png"), 0, 0, 0, 0])
     a.leftClick([pathof("images","valjButton.png"), 0, 0, 0, 0])
     a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
     
