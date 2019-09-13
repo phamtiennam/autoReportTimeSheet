@@ -80,7 +80,8 @@ def main():
 
     #openWebBrowser
     driver = webdriver.Chrome()
-    driver.maximize_window()
+    #driver.maximize_window()
+    driver.set_window_size(1080,800)
     driver.implicitly_wait(30)
     driver.get(url)
 
@@ -97,6 +98,8 @@ def main():
     elem = driver.find_element_by_name("database")
     elem.send_keys(getValFromJasonFile('Database',jsonfile))
 
+    time.sleep(5)
+
     elem.send_keys(Keys.RETURN)
 
     
@@ -105,7 +108,16 @@ def main():
     a.leftClick([pathof("images","valjButton.png"), 0, 0, 0, 0])
 
     #Click on OK Button
-    #a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
+    counter=15
+    ok_button = None
+    while ok_button is None and counter != 0 :
+        counter = counter - 1
+        ok_button = pyautogui.locateOnScreen(pathof("images","okButton.png"), confidence=0.8)
+        time.sleep(1)
+   
+    if ok_button is not None:
+        a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
+
 
     #Activity and Assignment ID
     a.fill_in_text(getValFromJasonFile('Activity',jsonfile),[pathof("images","Activity.png"), 0, 0, 30, 0])
@@ -120,10 +132,9 @@ def main():
         if "0" in val or val.isdigit() is False:
              a.fill_in_text("8",[pathof("images",imagefile), 0, 10, 30, 0])
         else:
-            print("===================hhha==============================")
             a.fill_in_text(val,[pathof("images",imagefile), 0, 10, 50, 0])
 
-    #a.leftClick([pathof("images","saveButton.png"), 0, 0, 0, 0])
+    pyautogui.alert(text='Please check and save the time-sheet then Click OK when you are done', title='', button='OK')
 
     print("_____________END_____________________")
 
