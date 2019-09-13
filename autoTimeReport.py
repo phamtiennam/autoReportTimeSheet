@@ -17,8 +17,12 @@ import sys
 import subprocess
 import webbrowser as wb
 import json
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 jsonfile='data.json'
+url = "https://px.afdrift.se/login/login.asp"
+
 
 class locateMouse:
     pic_name,icrs_x,decre_x,icrs_y,decre_y = ["",0,0,0,0]
@@ -48,16 +52,13 @@ class locateMouse:
         
     def leftClick(self,inputList = []):
         self.assignVal(inputList)
-        delaytime = 6
+        delaytime = 15
         self.delay4image(self.pic_name,delaytime)
         x,y = self.locationOnScreen()
         pyautogui.click(x, y)
+        print("......")
 
     def fill_in_text(self,strData, inputList = []):
-        self.pic_name = inputList[0]
-        tmpList = [self.pic_name,0,0,0,0]
-        self.leftClick(tmpList)
-
         self.leftClick(inputList)
         pyautogui.hotkey('ctrl', 'a')
         pyautogui.typewrite(strData)
@@ -68,10 +69,6 @@ def pathof(subdir,filename):
     pathname=os.path.join(pathname,subdir,filename)
     return pathname
 
-def openWebBrowser():
-    url="https://px.afdrift.se/login/login.asp"
-    wb.open_new_tab(url)
-
 def getValFromJasonFile(key,jsonfile):
     with open(jsonfile, 'r') as f:
         data_dict = json.load(f)
@@ -79,33 +76,56 @@ def getValFromJasonFile(key,jsonfile):
         return data[key]
 
 def main():
-    openWebBrowser()
     a = locateMouse()
-    
-    a.fill_in_text(getValFromJasonFile('Username',jsonfile),[pathof("images","Username.png"), 100, 0, 0, 0])
-    a.fill_in_text(getValFromJasonFile('Password',jsonfile),[pathof("images","Password.png"), 100, 0, 0, 0])
-    a.fill_in_text(getValFromJasonFile('Server',jsonfile),[pathof("images","Server.png"), 100, 0, 0, 0])
-    a.fill_in_text(getValFromJasonFile('Database',jsonfile),[pathof("images","Database.png"), 100, 0, 0, 0])
 
-    a.leftClick([pathof("images","login_Button.png"), 0, 0, 0, 0])
-    a.leftClick([pathof("images","valjButton.png"), 0, 0, 0, 0])
-    a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
+    #openWebBrowser
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    driver.implicitly_wait(30)
+    driver.get(url)
+
+    #Login
+    elem = driver.find_element_by_id("username")
+    elem.send_keys(getValFromJasonFile('Username',jsonfile))
+
+    elem = driver.find_element_by_id("password")
+    elem.send_keys(getValFromJasonFile('Password',jsonfile))
+
+    elem = driver.find_element_by_name("server")
+    elem.send_keys(getValFromJasonFile('Server',jsonfile))
+
+    elem = driver.find_element_by_name("database")
+    elem.send_keys(getValFromJasonFile('Database',jsonfile))
+
+    elem.send_keys(Keys.RETURN)
+
     
+
+    #Click on Välj Button
+    a.leftClick([pathof("images","valjButton.png"), 0, 0, 0, 0])
+
+    #Click on OK Button
+    #a.leftClick([pathof("images","okButton.png"), 0, 0, 0, 0])
+
+    #Activity and Assignment ID
     a.fill_in_text(getValFromJasonFile('Activity',jsonfile),[pathof("images","Activity.png"), 0, 0, 30, 0])
     a.fill_in_text(getValFromJasonFile('Assignment',jsonfile),[pathof("images","Assignment.png"), 0, 0, 30, 0])
     a.leftClick([pathof("images","load.png"), 0, 0, 0, 0])
 
+    #Working Days
     week = ["Mon", "Tues", "Wed", "Thurs", "Fri"]
-
     for date in week:
         imagefile= date + ".png"
         val=getValFromJasonFile(date,jsonfile)
         if "0" in val or val.isdigit() is False:
-             a.fill_in_text("8",[pathof("images",imagefile), 0, 0, 30, 0])
+             a.fill_in_text("8",[pathof("images",imagefile), 0, 10, 30, 0])
         else:
-             a.fill_in_text(val,[pathof("images",imagefile), 0, 0, 50, 0])
+            print("===================hhha==============================")
+            a.fill_in_text(val,[pathof("images",imagefile), 0, 10, 50, 0])
 
-    a.leftClick([pathof("images","saveButton.png"), 0, 0, 0, 0])
+    #a.leftClick([pathof("images","saveButton.png"), 0, 0, 0, 0])
+
+    print("_____________END_____________________")
 
 if __name__ == "__main__":
     main()
