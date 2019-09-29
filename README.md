@@ -1,13 +1,14 @@
 # autoReportTimeSheet
 
 Welcome Segular colleagues to my Github.
+
 Here is a script to automate Visma PX timesheet reporting.
 
 Let's get started!
 
 First,you need to edit the *data.json* file with your information
 
-'''
+```
 [
     {
         "Username": "AXXX",
@@ -23,7 +24,7 @@ First,you need to edit the *data.json* file with your information
         "Fri": "8"
     }
 ]
-'''
+```
 
 Second,execute the following command:
 ```
