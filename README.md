@@ -30,8 +30,9 @@ Second,execute the following command:
 ```
      python3 autoTimeReport.py
 ```
-#Demo
-[YouTube](https://youtu.be/oHadfU2GZDg)
+# Demo on YouTube
+
+[![](http://img.youtube.com/vi/oHadfU2GZDg/0.jpg)](http://www.youtube.com/watch?v=oHadfU2GZDg "")
 
 # Note
  - Python version 3.7.3
