@@ -30,6 +30,8 @@ Second,execute the following command:
 ```
      python3 autoTimeReport.py
 ```
+#Demo
+[YouTube](https://youtu.be/oHadfU2GZDg)
 
 # Note
  - Python version 3.7.3
